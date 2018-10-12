@@ -1,23 +1,11 @@
 const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
-
-// Designed for custom functionality on a child process
-// If you choose to
-// Store the workers and design you will
-// The only reason I can think of is creating more workers asynchorously when need be
-// To scale for your personal needs, the max amount of processes is set by default
-global.clusters = {};
+const numCPUs = 8;
 
 // Master process
 // This is the node that runs and controls where to distribute traffic it is slave processors
 // This follows the master to slave model because the master is distribute the work hitting your server
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is in control running with ${numCPUs} threads`);
-
-    // Used to run your server on one port
-    // If different ports are used, you will discover new difficulties 
-    // Which is not how a multithread server works
-    global.clusters.master = Number(process.env.PORT);
 
     // Fork workers.
     for (let i = 0; i < numCPUs; i++) {
@@ -50,6 +38,7 @@ if (cluster.isMaster) {
         console.log(`worker ${worker.process.pid} died`);
         // Create a new child process after one has been killed
         cluster.fork();
+        console.log(`worker ${worker.process.pid} is attempting to signal for a new worker to take it's place`);
     });
 
 } else {
@@ -57,3 +46,4 @@ if (cluster.isMaster) {
     // isWorker will be true: set the children's work
     require('./server');
 }
+
