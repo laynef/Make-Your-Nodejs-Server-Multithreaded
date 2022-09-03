@@ -1,5 +1,7 @@
 # Make Your Node.js Server Scalable with Multithreads
 
+Node.js Cluster Documentation: https://nodejs.org/dist/latest-v16.x/docs/api/cluster.html#how-it-works
+
 ## Multiple Thread Comparsions
 - By defaut Ruby on Rails runs 5 worker processes
 - By default I set the max which today is 8 worker processes
